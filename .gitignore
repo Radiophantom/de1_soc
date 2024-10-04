@@ -3,3 +3,6 @@ incremental_db/
 output_files/
 *.qws
 c5_pin_model_dump.txt
+*.sopcinfo
+.qsys_edit/
+cpu_subsystem/

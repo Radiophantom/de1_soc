@@ -164,21 +164,26 @@ module top(
       output             VGA_VS
 );
 
-logic clk;
+logic rst_n;
 logic rst;
+logic clk;
 
-assign rst = !KEY[0];
-assign clk = CLOCK_50;
+assign rst_n  = KEY[0];
+assign rst    = !KEY[0];
+assign clk    = CLOCK_50;
 
-logic [9:0] led_reg;
+assign LEDR = '0;
+assign HEX0 = '0;
+assign HEX1 = '0;
+assign HEX2 = '0;
+assign HEX3 = '0;
+assign HEX4 = '0;
+assign HEX5 = '0;
 
-always_ff @(posedge clk,posedge rst)
-  if(rst)
-    led_reg <= '0;
-  else
-    led_reg <= SW[0] ? 10'b1001010111 : 10'b0110101000;
-
-assign LEDR = led_reg;
+cpu_subsystem cpu_subsystem (
+  .clk_clk        ( clk   ),
+  .reset_reset_n  ( rst_n )
+);
 
 endmodule
 
