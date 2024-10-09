@@ -53,7 +53,7 @@ proc send_data_word {data} {
 }
 
 proc rcv_word {} {
-  while { ([read16 5] & (1 << 0)) == 0 } {}
+  while { ([read16 5] & (1 << 2)) == 0 } {}
   set rcv_word_data [read16 7]
   set rcv_word_sync [expr [read16 8] & (1 << 0)]
   if {$rcv_word_sync == 0x0} {
