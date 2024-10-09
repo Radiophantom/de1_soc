@@ -9,7 +9,7 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element CSR_RAM_16Kb
+   element CSR_RAM_128Kb
    {
       datum _sortIndex
       {
@@ -17,15 +17,15 @@
          type = "int";
       }
    }
-   element CSR_RAM_16Kb.s1
+   element CSR_RAM_128Kb.s1
    {
       datum baseAddress
       {
-         value = "196608";
+         value = "262144";
          type = "String";
       }
    }
-   element CSR_RAM_16Kb.s2
+   element CSR_RAM_128Kb.s2
    {
       datum baseAddress
       {
@@ -53,7 +53,7 @@
    {
       datum baseAddress
       {
-         value = "262144";
+         value = "393216";
          type = "String";
       }
    }
@@ -61,7 +61,7 @@
    {
       datum baseAddress
       {
-         value = "65536";
+         value = "131072";
          type = "String";
       }
    }
@@ -145,12 +145,12 @@
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
  <module
-   name="CSR_RAM_16Kb"
+   name="CSR_RAM_128Kb"
    kind="altera_avalon_onchip_memory2"
    version="18.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="false" />
-  <parameter name="autoInitializationFileName">$${FILENAME}_CSR_RAM_16Kb</parameter>
+  <parameter name="autoInitializationFileName">$${FILENAME}_CSR_RAM_128Kb</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="16" />
@@ -164,7 +164,7 @@
   <parameter name="initMemContent" value="true" />
   <parameter name="initializationFileName" value="onchip_mem.hex" />
   <parameter name="instanceID" value="1" />
-  <parameter name="memorySize" value="16384" />
+  <parameter name="memorySize" value="131072" />
   <parameter name="readDuringWriteMode" value="DONT_CARE" />
   <parameter name="resetrequest_enabled" value="true" />
   <parameter name="simAllowMRAMContentsFile" value="false" />
@@ -242,7 +242,7 @@
   <parameter name="dataAddrWidth" value="19" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='NIOS_CORE.debug_mem_slave' start='0x800' end='0x1000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='NIOS_ON_CHIP_RAM_4Kb.s1' start='0x10000' end='0x11000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid_qsys_0.control_slave' start='0x20000' end='0x20008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='CSR_RAM_16Kb.s1' start='0x30000' end='0x34000' type='altera_avalon_onchip_memory2.s1' /><slave name='MIL_STD_EMUL_RAM_1Kb.s1' start='0x40000' end='0x40400' type='altera_avalon_onchip_memory2.s1' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='NIOS_CORE.debug_mem_slave' start='0x800' end='0x1000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='NIOS_ON_CHIP_RAM_4Kb.s1' start='0x10000' end='0x11000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid_qsys_0.control_slave' start='0x20000' end='0x20008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='CSR_RAM_128Kb.s1' start='0x40000' end='0x60000' type='altera_avalon_onchip_memory2.s1' /><slave name='MIL_STD_EMUL_RAM_1Kb.s1' start='0x60000' end='0x60400' type='altera_avalon_onchip_memory2.s1' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -467,9 +467,9 @@
    kind="avalon"
    version="18.1"
    start="NIOS_CORE.data_master"
-   end="CSR_RAM_16Kb.s1">
+   end="CSR_RAM_128Kb.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00030000" />
+  <parameter name="baseAddress" value="0x00040000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -487,7 +487,7 @@
    start="NIOS_CORE.data_master"
    end="MIL_STD_EMUL_RAM_1Kb.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00040000" />
+  <parameter name="baseAddress" value="0x00060000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -512,7 +512,7 @@
    kind="avalon"
    version="18.1"
    start="DBG_amm_master.master"
-   end="CSR_RAM_16Kb.s2">
+   end="CSR_RAM_128Kb.s2">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
@@ -523,7 +523,7 @@
    start="DBG_amm_master.master"
    end="MIL_STD_EMUL_RAM_1Kb.s2">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00010000" />
+  <parameter name="baseAddress" value="0x00020000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection kind="clock" version="18.1" start="clk_0.clk" end="NIOS_CORE.clk" />
@@ -533,7 +533,11 @@
    start="clk_0.clk"
    end="DBG_amm_master.clk" />
  <connection kind="clock" version="18.1" start="clk_0.clk" end="sysid_qsys_0.clk" />
- <connection kind="clock" version="18.1" start="clk_0.clk" end="CSR_RAM_16Kb.clk1" />
+ <connection
+   kind="clock"
+   version="18.1"
+   start="clk_0.clk"
+   end="CSR_RAM_128Kb.clk1" />
  <connection
    kind="clock"
    version="18.1"
@@ -563,7 +567,7 @@
    kind="reset"
    version="18.1"
    start="clk_0.clk_reset"
-   end="CSR_RAM_16Kb.reset1" />
+   end="CSR_RAM_128Kb.reset1" />
  <connection
    kind="reset"
    version="18.1"
