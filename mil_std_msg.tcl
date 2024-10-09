@@ -35,22 +35,37 @@
 ##################################################
 
 proc send_command_word {data} {
+  write16 2 $data
+  write16 3 0x0
+  write16 4 0x0
+  write16 1 0x1
+  while { [read16 1] & (1 << 0) } {}
   puts "SEND 'COMMAND WORD': DATA - [format 0x%x $data]"
 }
 
 proc send_data_word {data} {
+  write16 2 $data
+  write16 3 0x1
+  write16 4 0x0
+  write16 1 0x1
+  while { [read16 1] & (1 << 0) } {}
   puts "SEND 'DATA WORD': DATA - [format 0x%x $data]"
 }
 
 proc rcv_word {} {
-  set rcv_word_data 0x0000
-  set rcv_word_sync 0x1
+  while { ([read16 5] & (1 << 0)) == 0 } {}
+  set rcv_word_data [read16 7]
+  set rcv_word_sync [expr [read16 8] & (1 << 0)]
   if {$rcv_word_sync == 0x0} {
     puts "RECEIVED COMMAND WORD: $rcv_word_data"
   } else {
     puts "RECEIVED DATA WORD: $rcv_word_data"
   }
-  return [dict create sync $rcv_word_sync data $rcv_word_data]
+  set response [dict create sync $rcv_word_sync data $rcv_word_data]
+  dict for {key value} $response {
+    puts "$key $value"
+  }
+  return $response
 }
 
 ##################################################
@@ -65,26 +80,20 @@ proc rcv_data {RT_ADDRESS SUB_ADDRESS WORDS_COUNT} {
     send_data_word $DATA
     incr DATA
   }
-  dict for {key value} [rcv_word] {
-    puts "$key $value"
-  }
+  rcv_word
 }
 
 proc rcv_mcode_data {RT_ADDRESS CODE WORD} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (31 << 5) + $CODE]
   send_command_word $CMD_WORD
   send_data_word $WORD
-  dict for {key value} [rcv_word] {
-    puts "$key $value"
-  }
+  rcv_word
 }
 
 proc rcv_mcode_no_data {RT_ADDRESS CODE} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (31 << 5) + $CODE]
   send_command_word $CMD_WORD
-  dict for {key value} [rcv_word] {
-    puts "$key $value"
-  }
+  rcv_word
 }
 
 proc rcv_data_bc {SUB_ADDRESS WORDS_COUNT} {
@@ -149,33 +158,23 @@ proc rcv_mcode_no_data_bc {CODE} {
 proc xmt_data {RT_ADDRESS SUB_ADDRESS WORDS_COUNT} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (1 << 10) + ($SUB_ADDRESS << 5) + $WORDS_COUNT]
   send_command_word $CMD_WORD
-  dict for {key value} [rcv_word] {
-    puts "$key $value"
-  }
+  rcv_word
   for {set i 0} {$i < $WORDS_COUNT} {incr i} {
-    dict for {key value} [rcv_word] {
-      puts "$key $value"
-    }
+    rcv_word
   }
 }
 
 proc xmt_mcode_data {RT_ADDRESS CODE} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (1 << 10) + (31 << 5) + $CODE]
   send_command_word $CMD_WORD
-  dict for {key value} [rcv_word] {
-    puts "$key $value"
-  }
-  dict for {key value} [rcv_word] {
-    puts "$key $value"
-  }
+  rcv_word
+  rcv_word
 }
 
 proc xmt_mcode_no_data {RT_ADDRESS CODE} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (1 << 10) + (31 << 5) + $CODE]
   send_command_word $CMD_WORD
-  dict for {key value} [rcv_word] {
-    puts "$key $value"
-  }
+  rcv_word
 }
 
 ################################################################################
