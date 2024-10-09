@@ -22,6 +22,7 @@ oo::define MEM_IO {
   constructor {master_index address_space_start address_space_size} {
     set ADDRESS_SPACE_START $address_space_start
     set ADDRESS_SPACE_END   [expr $address_space_start + $address_space_size - 1]
+    set ADDRESS_SPACE_SIZE  $address_space_size
     set MASTER_NAME         [lindex [get_service_paths master] $master_index]
     if { $MASTER_NAME == "" } {
       puts "\[ERROR\] No master with $master_index index exists! Exiting..."
@@ -48,8 +49,8 @@ oo::define MEM_IO {export mem32_dump}
 oo::define MEM_IO {
 
   method read8 {addr} {
-    set rd_addr [expr $addr*1]
-    if { ($rd_addr < $ADDRESS_SPACE_START) || ([expr $rd_addr + 0] > $ADDRESS_SPACE_END) } {
+    set rd_addr [expr $addr*1 + $ADDRESS_SPACE_START]
+    if { [expr $rd_addr + 0] > $ADDRESS_SPACE_END } {
       return "\[ERROR\]: 'read8()' - out of address range!"
     }
     open_service master $MASTER_NAME
@@ -59,8 +60,8 @@ oo::define MEM_IO {
   }
 
   method read16 {addr} {
-    set rd_addr [expr $addr*2]
-    if { ($rd_addr < $ADDRESS_SPACE_START) || ([expr $rd_addr + 1] > $ADDRESS_SPACE_END) } {
+    set rd_addr [expr $addr*2 + $ADDRESS_SPACE_START]
+    if { [expr $rd_addr + 1] > $ADDRESS_SPACE_END } {
       return "\[ERROR\]: 'read16()' - out of address range!"
     }
     open_service master $MASTER_NAME
@@ -72,8 +73,8 @@ oo::define MEM_IO {
   }
 
   method read32 {addr} {
-    set rd_addr [expr $addr*4]
-    if { ($rd_addr < $ADDRESS_SPACE_START) || ([expr $rd_addr + 3] > $ADDRESS_SPACE_END) } {
+    set rd_addr [expr $addr*4 + $ADDRESS_SPACE_START]
+    if { [expr $rd_addr + 3] > $ADDRESS_SPACE_END } {
       return "\[ERROR\]: 'read32()' - out of address range!"
     }
     open_service master $MASTER_NAME
@@ -92,8 +93,8 @@ oo::define MEM_IO {
 oo::define MEM_IO {
 
   method write8 {addr data} {
-    set wr_addr [expr $addr*1]
-    if { ($wr_addr < $ADDRESS_SPACE_START) || ([expr $wr_addr + 0] > $ADDRESS_SPACE_END) } {
+    set wr_addr [expr $addr*1 + $ADDRESS_SPACE_START]
+    if { [expr $wr_addr + 0] > $ADDRESS_SPACE_END } {
       return "\[ERROR\]: 'write8()' - out of address range!"
     }
     open_service master $MASTER_NAME
@@ -102,8 +103,8 @@ oo::define MEM_IO {
   }
   
   method write16 {addr data} {
-    set wr_addr [expr $addr*2]
-    if { ($wr_addr < $ADDRESS_SPACE_START) || ([expr $wr_addr + 1] > $ADDRESS_SPACE_END) } {
+    set wr_addr [expr $addr*2 + $ADDRESS_SPACE_START]
+    if { [expr $wr_addr + 1] > $ADDRESS_SPACE_END } {
       return "\[ERROR\]: 'write16()' - out of address range!"
     }
     open_service master $MASTER_NAME
@@ -113,8 +114,8 @@ oo::define MEM_IO {
   }
   
   method write32 {addr data} {
-    set wr_addr [expr $addr*4]
-    if { ($wr_addr < $ADDRESS_SPACE_START) || ([expr $wr_addr + 3] > $ADDRESS_SPACE_END) } {
+    set wr_addr [expr $addr*4 + $ADDRESS_SPACE_START]
+    if { [expr $wr_addr + 3] > $ADDRESS_SPACE_END } {
       return "\[ERROR\]: 'write32()' - out of address range!"
     }
     open_service master $MASTER_NAME
@@ -131,19 +132,19 @@ oo::define MEM_IO {
 oo::define MEM_IO {
 
   method mem8_dump {} {
-    for {set i $ADDRESS_SPACE_START} {$i <= $ADDRESS_SPACE_END} {incr i} {
+    for {set i 0} {$i < $ADDRESS_SPACE_SIZE} {incr i} {
       puts "$i : [my read8 $i]"
     }
   }
   
   method mem16_dump {} {
-    for {set i $ADDRESS_SPACE_START} {$i <= [expr $ADDRESS_SPACE_END/2]} {incr i} {
+    for {set i 0} {$i < [expr $ADDRESS_SPACE_SIZE/2]} {incr i} {
       puts "$i : [my read16 $i]"
     }
   }
   
   method mem32_dump {} {
-    for {set i $ADDRESS_SPACE_START} {$i <= [expr $ADDRESS_SPACE_END/4]} {incr i} {
+    for {set i 0} {$i < [expr $ADDRESS_SPACE_SIZE/4]} {incr i} {
       puts "$i : [my read32 $i]"
     }
   }
