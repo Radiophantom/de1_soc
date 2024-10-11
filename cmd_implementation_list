@@ -1,0 +1,93 @@
+
+################################################################################
+# Must be implemented
+################################################################################
+
+CMD_NAME            FUNC_NAME
+
+SS_RTDEFADDRESS     rtdefaddress
+SS_RTGETADDRESS     rtgetaddress
+SS_RTDEFMODE        rtdefmode
+SS_RTPUTCMDDATA     rtputcmddata
+SS_RTRESET          rtreset
+SS_RTCLRANSWBITS    rtclranswbits
+SS_RTSETANSWBITS    rtsetanswbits
+SS_RTGETANSWBITS    rtgetanswbits
+SS_RTGETSTATE       rtgetstate
+SS_RTPUTW           rtputw
+SS_RTGETW           rtgetw
+SS_RTPUTBLK         rtputblk
+SS_RTGETBLK         rtgetblk
+
+SS_BCPUTW           bcputw
+SS_BCGETW           bcgetw
+SS_BCPUTBLK         bcputblk
+SS_BCGETBLK         bcgetblk
+SS_BCSTART          bcstart
+
+SS_TMKDEFMODE       tmkdefmode
+SS_TMKUNDEFMODE     tmkundefmode
+
+################################################################################
+# List all software used functions
+################################################################################
+
+#! - Implemented in software only
+## - Not implemented anywhere
+
+CMD_NAME                FUNC_NAME
+
+# RT mode
+   SS_RTDEFADDRESS      rtdefaddress
+   SS_RTGETADDRESS      rtgetaddress
+   SS_RTDEFMODE         rtdefmode
+   SS_RTPUTCMDDATA      rtputcmddata
+   SS_RTRESET           rtreset
+   SS_RTCLRANSWBITS     rtclranswbits
+   SS_RTSETANSWBITS     rtsetanswbits
+   SS_RTGETANSWBITS     rtgetanswbits
+   SS_RTGETSTATE        rtgetstate
+   SS_RTPUTW            rtputw
+   SS_RTGETW            rtgetw
+   SS_RTPUTBLK          rtputblk
+   SS_RTGETBLK          rtgetblk
+#! SS_RTGETMAXPAGE      rtgetmaxpage
+#! SS_RTGETMODE         rtgetmode
+#! SS_RTDEFPAGE         rtdefpage
+#! SS_RTGETPAGE         rtgetpage
+#! SS_RTDEFPAGEPC       rtdefpagepc
+#! SS_RTGETPAGEPC       rtgetpagepc
+#! SS_RTDEFPAGEBUS      rtdefpagebus
+#! SS_RTGETPAGEBUS      rtgetpagebus
+#! SS_RTGETFLAG         rtgetflag
+#! SS_RTGETCMDDATA      rtgetcmddata
+## SS_RTLOCK            rtlock
+## SS_RTUNLOCK          rtunlock
+## SS_RTSETFLAG         rtsetflag
+## SS_RTCLRFLAG         rtclrflag
+## SS_RTANSW_LOCK       rtansw_lock
+## SS_RTANSW_UNLOCK     rtansw_unlock
+## SS_RTARB_LOCK        rtarb_lock
+## SS_RTARB_UNLOCK      rtarb_unlock
+
+# BC mode
+   SS_BCPUTW            bcputw
+   SS_BCGETW            bcgetw
+   SS_BCPUTBLK          bcputblk
+   SS_BCGETBLK          bcgetblk
+   SS_BCSTART           bcstart
+#! SS_BCGETMAXBASE      bcgetmaxbase
+#! SS_BCDEFBUS          bcdefbus
+#! SS_BCGETBUS          bcgetbus
+
+# TMK
+   SS_TMKDEFMODE        tmkdefmode
+   SS_TMKUNDEFMODE      tmkundefmode
+#! SS_TMKGETMODE        tmkgetmode
+#! SS_TMKDEFPROXY       tmkdefproxy
+#! SS_TMKGETINFO        tmkgetinfo
+#! SS_TMKGETPXD         tmkgetpxd
+## SS_TMK_LOCK          tmk_lock
+## SS_TMK_UNLOCK        tmk_unlock
+## SS_TMKPROXYMODE      tmkproxymode
+
