@@ -16,6 +16,7 @@ oo::define MEM_IO {
   variable MASTER_NAME
   variable ADDRESS_SPACE_START
   variable ADDRESS_SPACE_END
+  variable ADDRESS_SPACE_SIZE
 }
 
 oo::define MEM_IO {
