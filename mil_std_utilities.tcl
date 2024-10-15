@@ -54,9 +54,10 @@ proc send_word {cmd data} {
 }
 
 proc rcv_word {} {
-  while { ([mil_std_mem read16 5] & (1 << 2)) == 0 } {}
+  while { ([mil_std_mem read16 6] & (1 << 0)) == 0 } {}
   set rcv_word_data [mil_std_mem read16 7]
   set rcv_word_sync [expr [mil_std_mem read16 8] & (1 << 0)]
+  mil_std_mem write16 6 0x0
   if {$rcv_word_sync == 0x0} {
     puts "RECEIVED COMMAND WORD: $rcv_word_data"
   } else {

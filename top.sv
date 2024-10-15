@@ -173,12 +173,12 @@ assign rst    = !KEY[0];
 assign clk    = CLOCK_50;
 
 assign LEDR = '0;
-assign HEX0 = '1;
-assign HEX1 = '1;
-assign HEX2 = '1;
-assign HEX3 = '1;
-assign HEX4 = '1;
-assign HEX5 = '1;
+assign HEX0 = '0;
+assign HEX1 = '0;
+assign HEX2 = '0;
+assign HEX3 = '0;
+assign HEX4 = '0;
+assign HEX5 = '0;
 
 cpu_subsystem cpu_subsystem (
   .clk_clk        ( clk   ),
