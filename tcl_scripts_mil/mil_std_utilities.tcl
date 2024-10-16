@@ -1,9 +1,5 @@
 
 ##################################################
-############ BC emulation commands ###############
-##################################################
-
-##################################################
 # Functions prototype
 ##################################################
 #
@@ -31,8 +27,10 @@
 #   proc xmt_mcode_no_data {}
 
 ##################################################
-# Simple commands (low-level CSR drivers)
+# Import memory routines and create memory class
 ##################################################
+
+source ../mem.tcl
 
 set MIL_STD_CONTROLLER_INDX         0
 set MIL_STD_CONTROLLER_BASE_ADDR    0x20000
@@ -40,12 +38,21 @@ set MIL_STD_CONTROLLER_REGION_SIZE  1024
 
 MEM_IO create mil_std_mem $MIL_STD_CONTROLLER_INDX $MIL_STD_CONTROLLER_BASE_ADDR $MIL_STD_CONTROLLER_REGION_SIZE
 
+##################################################
+# Simple commands (low-level CSR drivers)
+##################################################
+
 proc send_word {cmd data} {
   mil_std_mem write16 2 $data
   mil_std_mem write16 3 $cmd
   mil_std_mem write16 4 0x0
   mil_std_mem write16 1 0x1
-  while { [mil_std_mem read16 1] & (1 << 0) } {}
+  for {set i 0} {$i < 1000} {incr i} {
+    if { [expr [mil_std_mem read16 1] & (1 << 0)] == 0 } {
+      break
+    }
+    after 1
+  }
   if { $cmd == 0 } {
     puts "SEND 'COMMAND WORD': DATA - [format 0x%x $data]"
   } else {
@@ -54,7 +61,12 @@ proc send_word {cmd data} {
 }
 
 proc rcv_word {} {
-  while { ([mil_std_mem read16 6] & (1 << 0)) == 0 } {}
+  for {set i 0} {$i < 1000} {incr i} {
+    if { [expr [mil_std_mem read16 6] & (1 << 0)] } {
+      break
+    }
+    after 1
+  }
   set rcv_word_data [mil_std_mem read16 7]
   set rcv_word_sync [expr [mil_std_mem read16 8] & (1 << 0)]
   mil_std_mem write16 6 0x0
@@ -179,23 +191,3 @@ proc xmt_mcode_no_data {RT_ADDRESS CODE} {
   rcv_word
 }
 
-################################################################################
-# May be will be implemented later
-################################################################################
-
-#proc check_rt_addr {rt_address} {
-#  if {($rt_address < 0) || ($rt_address > 31)} {
-#    return 1
-#  }
-#  return 0
-#}
-
-# rcv_data 1 1 1
-# rcv_mcode_data 1 1 0xABCD
-# rcv_mcode_no_data 1 2
-# rcv_data_bc 2 5
-# rcv_mcode_data_bc 3
-# rcv_mcode_no_data_bc 4
-# xmt_data 1 1 1
-# xmt_mcode_data 1 5
-# xmt_mcode_no_data 1 6
