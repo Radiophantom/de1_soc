@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="cpu_subsystem" kind="cpu_subsystem" version="1.0" fabric="QSYS">
  <!-- Format version 18.1 625 (Future versions may contain additional information.) -->
- <!-- 2024.10.14.16:37:38 -->
+ <!-- 2024.12.15.13:33:32 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1728909458</value>
+  <value>1734255212</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -1855,11 +1855,11 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>MIL_STD_EMUL_RAM_1Kb</moduleName>
+    <moduleName>MIL_STD_CONTROLLER</moduleName>
     <slaveName>s2</slaveName>
-    <name>MIL_STD_EMUL_RAM_1Kb.s2</name>
+    <name>MIL_STD_CONTROLLER.s2</name>
     <baseAddress>131072</baseAddress>
-    <span>1024</span>
+    <span>16</span>
    </memoryBlock>
   </interface>
   <interface name="master_reset" kind="reset_source" version="18.1">
@@ -1925,10 +1925,10 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <module
-   name="MIL_STD_EMUL_RAM_1Kb"
+   name="MIL_STD_CONTROLLER"
    kind="altera_avalon_onchip_memory2"
    version="18.1"
-   path="MIL_STD_EMUL_RAM_1Kb">
+   path="MIL_STD_CONTROLLER">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <assignment>
@@ -1953,7 +1953,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_CONTENTS_FILE</name>
-   <value>cpu_subsystem_MIL_STD_EMUL_RAM_1Kb</value>
+   <value>cpu_subsystem_MIL_STD_CONTROLLER</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_MEM_CONTENT</name>
@@ -1985,7 +1985,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.SIZE_VALUE</name>
-   <value>1024</value>
+   <value>16</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.WRITABLE</name>
@@ -2017,7 +2017,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.memoryInfo.MEM_INIT_FILENAME</name>
-   <value>cpu_subsystem_MIL_STD_EMUL_RAM_1Kb</value>
+   <value>cpu_subsystem_MIL_STD_CONTROLLER</value>
   </assignment>
   <assignment>
    <name>postgeneration.simulation.init_file.param_name</name>
@@ -2117,7 +2117,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="memorySize">
    <type>long</type>
-   <value>1024</value>
+   <value>16</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -2229,7 +2229,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="autoInitializationFileName">
    <type>java.lang.String</type>
-   <value>cpu_subsystem_MIL_STD_EMUL_RAM_1Kb</value>
+   <value>cpu_subsystem_MIL_STD_CONTROLLER</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -2256,7 +2256,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_set_addr_width">
    <type>int</type>
-   <value>9</value>
+   <value>3</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -2264,7 +2264,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_set_addr_width2">
    <type>int</type>
-   <value>9</value>
+   <value>3</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -2304,7 +2304,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_init_file_name">
    <type>java.lang.String</type>
-   <value>cpu_subsystem_MIL_STD_EMUL_RAM_1Kb.hex</value>
+   <value>cpu_subsystem_MIL_STD_CONTROLLER.hex</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -2356,7 +2356,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>1024</value>
+    <value>16</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -2444,7 +2444,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="explicitAddressSpan">
     <type>java.math.BigInteger</type>
-    <value>1024</value>
+    <value>16</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -2655,7 +2655,7 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>address</name>
     <direction>Input</direction>
-    <width>9</width>
+    <width>3</width>
     <role>address</role>
    </port>
    <port>
@@ -2733,7 +2733,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>1024</value>
+    <value>16</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -2821,7 +2821,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="explicitAddressSpan">
     <type>java.math.BigInteger</type>
-    <value>1024</value>
+    <value>16</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -3032,7 +3032,7 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>address2</name>
     <direction>Input</direction>
-    <width>9</width>
+    <width>3</width>
     <role>address</role>
    </port>
    <port>
@@ -3318,7 +3318,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.configuration.exceptionSlave</name>
-   <value>NIOS_ON_CHIP_RAM_4Kb.s1</value>
+   <value>NIOS_ON_CHIP_RAM_64Kb.s1</value>
   </assignment>
   <assignment>
    <name>embeddedsw.configuration.resetOffset</name>
@@ -3326,7 +3326,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.configuration.resetSlave</name>
-   <value>NIOS_ON_CHIP_RAM_4Kb.s1</value>
+   <value>NIOS_ON_CHIP_RAM_64Kb.s1</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.compatible</name>
@@ -3786,7 +3786,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="resetSlave">
    <type>java.lang.String</type>
-   <value>NIOS_ON_CHIP_RAM_4Kb.s1</value>
+   <value>NIOS_ON_CHIP_RAM_64Kb.s1</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -3802,7 +3802,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="exceptionSlave">
    <type>java.lang.String</type>
-   <value>NIOS_ON_CHIP_RAM_4Kb.s1</value>
+   <value>NIOS_ON_CHIP_RAM_64Kb.s1</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -4764,7 +4764,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="instSlaveMapParam">
    <type>java.lang.String</type>
-   <value><![CDATA[<address-map><slave name='NIOS_CORE.debug_mem_slave' start='0x800' end='0x1000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='NIOS_ON_CHIP_RAM_4Kb.s1' start='0x10000' end='0x11000' type='altera_avalon_onchip_memory2.s1' /></address-map>]]></value>
+   <value><![CDATA[<address-map><slave name='NIOS_CORE.debug_mem_slave' start='0x800' end='0x1000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='NIOS_ON_CHIP_RAM_64Kb.s1' start='0x10000' end='0x20000' type='altera_avalon_onchip_memory2.s1' /></address-map>]]></value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -4784,7 +4784,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="dataSlaveMapParam">
    <type>java.lang.String</type>
-   <value><![CDATA[<address-map><slave name='NIOS_CORE.debug_mem_slave' start='0x800' end='0x1000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='NIOS_ON_CHIP_RAM_4Kb.s1' start='0x10000' end='0x11000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid_qsys_0.control_slave' start='0x20000' end='0x20008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='CSR_RAM_128Kb.s1' start='0x40000' end='0x60000' type='altera_avalon_onchip_memory2.s1' /><slave name='MIL_STD_EMUL_RAM_1Kb.s1' start='0x60000' end='0x60400' type='altera_avalon_onchip_memory2.s1' /></address-map>]]></value>
+   <value><![CDATA[<address-map><slave name='NIOS_CORE.debug_mem_slave' start='0x800' end='0x1000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='NIOS_ON_CHIP_RAM_64Kb.s1' start='0x10000' end='0x20000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid_qsys_0.control_slave' start='0x20000' end='0x20008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='CSR_RAM_128Kb.s1' start='0x40000' end='0x60000' type='altera_avalon_onchip_memory2.s1' /><slave name='MIL_STD_CONTROLLER.s1' start='0x60000' end='0x60010' type='altera_avalon_onchip_memory2.s1' /></address-map>]]></value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -5476,19 +5476,19 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>NIOS_ON_CHIP_RAM_4Kb</moduleName>
+    <moduleName>NIOS_ON_CHIP_RAM_64Kb</moduleName>
     <slaveName>s1</slaveName>
-    <name>NIOS_ON_CHIP_RAM_4Kb.s1</name>
+    <name>NIOS_ON_CHIP_RAM_64Kb.s1</name>
     <baseAddress>65536</baseAddress>
-    <span>4096</span>
+    <span>65536</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>MIL_STD_EMUL_RAM_1Kb</moduleName>
+    <moduleName>MIL_STD_CONTROLLER</moduleName>
     <slaveName>s1</slaveName>
-    <name>MIL_STD_EMUL_RAM_1Kb.s1</name>
+    <name>MIL_STD_CONTROLLER.s1</name>
     <baseAddress>393216</baseAddress>
-    <span>1024</span>
+    <span>16</span>
    </memoryBlock>
   </interface>
   <interface name="instruction_master" kind="avalon_master" version="18.1">
@@ -5787,11 +5787,11 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>NIOS_ON_CHIP_RAM_4Kb</moduleName>
+    <moduleName>NIOS_ON_CHIP_RAM_64Kb</moduleName>
     <slaveName>s1</slaveName>
-    <name>NIOS_ON_CHIP_RAM_4Kb.s1</name>
+    <name>NIOS_ON_CHIP_RAM_64Kb.s1</name>
     <baseAddress>65536</baseAddress>
-    <span>4096</span>
+    <span>65536</span>
    </memoryBlock>
   </interface>
   <interface name="irq" kind="interrupt_receiver" version="18.1">
@@ -6389,10 +6389,10 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <module
-   name="NIOS_ON_CHIP_RAM_4Kb"
+   name="NIOS_ON_CHIP_RAM_64Kb"
    kind="altera_avalon_onchip_memory2"
    version="18.1"
-   path="NIOS_ON_CHIP_RAM_4Kb">
+   path="NIOS_ON_CHIP_RAM_64Kb">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <assignment>
@@ -6417,7 +6417,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_CONTENTS_FILE</name>
-   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_4Kb</value>
+   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_64Kb</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_MEM_CONTENT</name>
@@ -6449,7 +6449,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.SIZE_VALUE</name>
-   <value>4096</value>
+   <value>65536</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.WRITABLE</name>
@@ -6481,7 +6481,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.memoryInfo.MEM_INIT_FILENAME</name>
-   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_4Kb</value>
+   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_64Kb</value>
   </assignment>
   <assignment>
    <name>postgeneration.simulation.init_file.param_name</name>
@@ -6581,7 +6581,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="memorySize">
    <type>long</type>
-   <value>4096</value>
+   <value>65536</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -6693,7 +6693,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="autoInitializationFileName">
    <type>java.lang.String</type>
-   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_4Kb</value>
+   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_64Kb</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -6720,7 +6720,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_set_addr_width">
    <type>int</type>
-   <value>10</value>
+   <value>14</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -6728,7 +6728,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_set_addr_width2">
    <type>int</type>
-   <value>10</value>
+   <value>14</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -6768,7 +6768,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_init_file_name">
    <type>java.lang.String</type>
-   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_4Kb.hex</value>
+   <value>cpu_subsystem_NIOS_ON_CHIP_RAM_64Kb.hex</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -6865,7 +6865,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>4096</value>
+    <value>65536</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -6953,7 +6953,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="explicitAddressSpan">
     <type>java.math.BigInteger</type>
-    <value>4096</value>
+    <value>65536</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -7164,7 +7164,7 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>address</name>
     <direction>Input</direction>
-    <width>10</width>
+    <width>14</width>
     <role>address</role>
    </port>
    <port>
@@ -7517,15 +7517,15 @@ parameters are a RESULT of the module parameters. -->
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>NIOS_ON_CHIP_RAM_4Kb</moduleName>
+    <moduleName>NIOS_ON_CHIP_RAM_64Kb</moduleName>
     <slaveName>clk1</slaveName>
-    <name>NIOS_ON_CHIP_RAM_4Kb.clk1</name>
+    <name>NIOS_ON_CHIP_RAM_64Kb.clk1</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>MIL_STD_EMUL_RAM_1Kb</moduleName>
+    <moduleName>MIL_STD_CONTROLLER</moduleName>
     <slaveName>clk1</slaveName>
-    <name>MIL_STD_EMUL_RAM_1Kb.clk1</name>
+    <name>MIL_STD_CONTROLLER.clk1</name>
    </clockDomainMember>
   </interface>
   <interface name="clk_reset" kind="reset_source" version="18.1">
@@ -7603,7 +7603,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.TIMESTAMP</name>
-   <value>1728909458</value>
+   <value>1734255212</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.compatible</name>
@@ -7623,7 +7623,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.timestamp</name>
-   <value>1728909458</value>
+   <value>1734255212</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.vendor</name>
@@ -7639,7 +7639,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="timestamp">
    <type>int</type>
-   <value>1728909458</value>
+   <value>1734255212</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -8250,11 +8250,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
-   name="NIOS_CORE.data_master/NIOS_ON_CHIP_RAM_4Kb.s1"
+   name="NIOS_CORE.data_master/NIOS_ON_CHIP_RAM_64Kb.s1"
    kind="avalon"
    version="18.1"
    start="NIOS_CORE.data_master"
-   end="NIOS_ON_CHIP_RAM_4Kb.s1">
+   end="NIOS_ON_CHIP_RAM_64Kb.s1">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -8297,15 +8297,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>NIOS_CORE</startModule>
   <startConnectionPoint>data_master</startConnectionPoint>
-  <endModule>NIOS_ON_CHIP_RAM_4Kb</endModule>
+  <endModule>NIOS_ON_CHIP_RAM_64Kb</endModule>
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
-   name="NIOS_CORE.data_master/MIL_STD_EMUL_RAM_1Kb.s1"
+   name="NIOS_CORE.data_master/MIL_STD_CONTROLLER.s1"
    kind="avalon"
    version="18.1"
    start="NIOS_CORE.data_master"
-   end="MIL_STD_EMUL_RAM_1Kb.s1">
+   end="MIL_STD_CONTROLLER.s1">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -8348,7 +8348,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>NIOS_CORE</startModule>
   <startConnectionPoint>data_master</startConnectionPoint>
-  <endModule>MIL_STD_EMUL_RAM_1Kb</endModule>
+  <endModule>MIL_STD_CONTROLLER</endModule>
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
@@ -8403,11 +8403,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>debug_mem_slave</endConnectionPoint>
  </connection>
  <connection
-   name="NIOS_CORE.instruction_master/NIOS_ON_CHIP_RAM_4Kb.s1"
+   name="NIOS_CORE.instruction_master/NIOS_ON_CHIP_RAM_64Kb.s1"
    kind="avalon"
    version="18.1"
    start="NIOS_CORE.instruction_master"
-   end="NIOS_ON_CHIP_RAM_4Kb.s1">
+   end="NIOS_ON_CHIP_RAM_64Kb.s1">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -8450,7 +8450,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>NIOS_CORE</startModule>
   <startConnectionPoint>instruction_master</startConnectionPoint>
-  <endModule>NIOS_ON_CHIP_RAM_4Kb</endModule>
+  <endModule>NIOS_ON_CHIP_RAM_64Kb</endModule>
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
@@ -8505,11 +8505,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>s2</endConnectionPoint>
  </connection>
  <connection
-   name="DBG_amm_master.master/MIL_STD_EMUL_RAM_1Kb.s2"
+   name="DBG_amm_master.master/MIL_STD_CONTROLLER.s2"
    kind="avalon"
    version="18.1"
    start="DBG_amm_master.master"
-   end="MIL_STD_EMUL_RAM_1Kb.s2">
+   end="MIL_STD_CONTROLLER.s2">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -8552,7 +8552,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>DBG_amm_master</startModule>
   <startConnectionPoint>master</startConnectionPoint>
-  <endModule>MIL_STD_EMUL_RAM_1Kb</endModule>
+  <endModule>MIL_STD_CONTROLLER</endModule>
   <endConnectionPoint>s2</endConnectionPoint>
  </connection>
  <connection
@@ -8664,11 +8664,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>clk1</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/NIOS_ON_CHIP_RAM_4Kb.clk1"
+   name="clk_0.clk/NIOS_ON_CHIP_RAM_64Kb.clk1"
    kind="clock"
    version="18.1"
    start="clk_0.clk"
-   end="NIOS_ON_CHIP_RAM_4Kb.clk1">
+   end="NIOS_ON_CHIP_RAM_64Kb.clk1">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -8687,15 +8687,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>NIOS_ON_CHIP_RAM_4Kb</endModule>
+  <endModule>NIOS_ON_CHIP_RAM_64Kb</endModule>
   <endConnectionPoint>clk1</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/MIL_STD_EMUL_RAM_1Kb.clk1"
+   name="clk_0.clk/MIL_STD_CONTROLLER.clk1"
    kind="clock"
    version="18.1"
    start="clk_0.clk"
-   end="MIL_STD_EMUL_RAM_1Kb.clk1">
+   end="MIL_STD_CONTROLLER.clk1">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -8714,7 +8714,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>MIL_STD_EMUL_RAM_1Kb</endModule>
+  <endModule>MIL_STD_CONTROLLER</endModule>
   <endConnectionPoint>clk1</endConnectionPoint>
  </connection>
  <connection
@@ -8826,11 +8826,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>reset1</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/NIOS_ON_CHIP_RAM_4Kb.reset1"
+   name="clk_0.clk_reset/NIOS_ON_CHIP_RAM_64Kb.reset1"
    kind="reset"
    version="18.1"
    start="clk_0.clk_reset"
-   end="NIOS_ON_CHIP_RAM_4Kb.reset1">
+   end="NIOS_ON_CHIP_RAM_64Kb.reset1">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -8849,15 +8849,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>NIOS_ON_CHIP_RAM_4Kb</endModule>
+  <endModule>NIOS_ON_CHIP_RAM_64Kb</endModule>
   <endConnectionPoint>reset1</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/MIL_STD_EMUL_RAM_1Kb.reset1"
+   name="clk_0.clk_reset/MIL_STD_CONTROLLER.reset1"
    kind="reset"
    version="18.1"
    start="clk_0.clk_reset"
-   end="MIL_STD_EMUL_RAM_1Kb.reset1">
+   end="MIL_STD_CONTROLLER.reset1">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -8876,7 +8876,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>MIL_STD_EMUL_RAM_1Kb</endModule>
+  <endModule>MIL_STD_CONTROLLER</endModule>
   <endConnectionPoint>reset1</endConnectionPoint>
  </connection>
  <plugin>

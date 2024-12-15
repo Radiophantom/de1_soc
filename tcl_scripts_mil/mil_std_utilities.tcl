@@ -13,6 +13,11 @@
 #   proc rcv_mcode_data_bc {}
 #   proc rcv_mcode_no_data_bc {}
 #
+#   ### Transmit commands ###
+#   proc xmt_data {}
+#   proc xmt_mcode_data {}
+#   proc xmt_mcode_no_data {}
+#
 #   ### RT-RT commands ###
 #   proc rcv_rt_rt {}
 #   proc xmt_rt_rt {}
@@ -21,11 +26,6 @@
 #   proc rcv_rt_rt_bc {}
 #   proc xmt_rt_rt_bc {}
 #
-#   ### Transmit commands ###
-#   proc xmt_data {}
-#   proc xmt_mcode_data {}
-#   proc xmt_mcode_no_data {}
-
 ##################################################
 # Import memory routines and create memory class
 ##################################################
@@ -34,7 +34,7 @@ source ../mem.tcl
 
 set MIL_STD_CONTROLLER_INDX         0
 set MIL_STD_CONTROLLER_BASE_ADDR    0x20000
-set MIL_STD_CONTROLLER_REGION_SIZE  1024
+set MIL_STD_CONTROLLER_REGION_SIZE  16
 
 MEM_IO create mil_std_mem $MIL_STD_CONTROLLER_INDX $MIL_STD_CONTROLLER_BASE_ADDR $MIL_STD_CONTROLLER_REGION_SIZE
 
@@ -43,12 +43,11 @@ MEM_IO create mil_std_mem $MIL_STD_CONTROLLER_INDX $MIL_STD_CONTROLLER_BASE_ADDR
 ##################################################
 
 proc send_word {cmd data} {
-  mil_std_mem write16 2 $data
-  mil_std_mem write16 3 $cmd
-  mil_std_mem write16 4 0x0
-  mil_std_mem write16 1 0x1
+  mil_std_mem write16 3 $data
+  mil_std_mem write16 4 $cmd
+  mil_std_mem write16 2 (1 << 0)
   for {set i 0} {$i < 1000} {incr i} {
-    if { [expr [mil_std_mem read16 1] & (1 << 0)] == 0 } {
+    if { [expr [mil_std_mem read16 2] & (1 << 0)] == 0 } {
       break
     }
     after 1
@@ -62,14 +61,14 @@ proc send_word {cmd data} {
 
 proc rcv_word {} {
   for {set i 0} {$i < 1000} {incr i} {
-    if { [expr [mil_std_mem read16 6] & (1 << 0)] } {
+    if { [expr [mil_std_mem read16 9] & (1 << 0)] } {
       break
     }
     after 1
   }
-  set rcv_word_data [mil_std_mem read16 7]
-  set rcv_word_sync [expr [mil_std_mem read16 8] & (1 << 0)]
-  mil_std_mem write16 6 0x0
+  set rcv_word_data [mil_std_mem read16 10]
+  set rcv_word_sync [expr [mil_std_mem read16 11] & (1 << 15)]
+  mil_std_mem write16 9 0x0
   if {$rcv_word_sync == 0x0} {
     puts "RECEIVED COMMAND WORD: $rcv_word_data"
   } else {
