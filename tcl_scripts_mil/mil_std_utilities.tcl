@@ -34,7 +34,7 @@ source ../mem.tcl
 
 set MIL_STD_CONTROLLER_INDX         0
 set MIL_STD_CONTROLLER_BASE_ADDR    0x20000
-set MIL_STD_CONTROLLER_REGION_SIZE  16
+set MIL_STD_CONTROLLER_REGION_SIZE  22
 
 MEM_IO create mil_std_mem $MIL_STD_CONTROLLER_INDX $MIL_STD_CONTROLLER_BASE_ADDR $MIL_STD_CONTROLLER_REGION_SIZE
 
@@ -52,7 +52,7 @@ proc send_word {cmd data} {
     }
     after 1
   }
-  if { $cmd == 0 } {
+  if { $cmd == 1 } {
     puts "SEND 'COMMAND WORD': DATA - [format 0x%x $data]"
   } else {
     puts "SEND 'DATA WORD': DATA - [format 0x%x $data]"
@@ -88,46 +88,46 @@ proc rcv_word {} {
 proc rcv_data {RT_ADDRESS SUB_ADDRESS WORDS_COUNT} {
   set DATA 0x00
   set CMD_WORD [expr ($RT_ADDRESS << 11) + ($SUB_ADDRESS << 5) + $WORDS_COUNT]
-  send_word 0 $CMD_WORD
+  send_word 1 $CMD_WORD
   for {set i 0} {$i < $WORDS_COUNT} {incr i} {
-    send_word 1 $DATA
+    send_word 0 $DATA
     incr DATA
   }
-  rcv_word
+  #rcv_word
 }
 
 proc rcv_mcode_data {RT_ADDRESS CODE WORD} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (31 << 5) + $CODE]
-  send_word 0 $CMD_WORD
-  send_word 1 $WORD
-  rcv_word
+  send_word 1 $CMD_WORD
+  send_word 0 $WORD
+  #rcv_word
 }
 
 proc rcv_mcode_no_data {RT_ADDRESS CODE} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (31 << 5) + $CODE]
-  send_word 0 $CMD_WORD
-  rcv_word
+  send_word 1 $CMD_WORD
+  #rcv_word
 }
 
 proc rcv_data_bc {SUB_ADDRESS WORDS_COUNT} {
   set DATA 0x00
   set CMD_WORD [expr (31 << 11) + ($SUB_ADDRESS << 5) + $WORDS_COUNT]
-  send_word 0 $CMD_WORD
+  send_word 1 $CMD_WORD
   for {set i 0} {$i < $WORDS_COUNT} {incr i} {
-    send_word 1 $DATA
+    send_word 0 $DATA
     incr DATA
   }
 }
 
 proc rcv_mcode_data_bc {CODE} {
   set CMD_WORD [expr (31 << 11) + (31 << 5) + $CODE]
-  send_word 0 $CMD_WORD
-  send_word 1 $CODE
+  send_word 1 $CMD_WORD
+  send_word 0 $CODE
 }
 
 proc rcv_mcode_no_data_bc {CODE} {
   set CMD_WORD [expr (31 << 11) + (31 << 5) + $CODE]
-  send_word 0 $CMD_WORD
+  send_word 1 $CMD_WORD
 }
 
 #proc rcv_rt_rt {rt_address0 rt_address1 sub_address0 sub_address1 words_count} {
