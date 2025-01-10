@@ -185,5 +185,9 @@ cpu_subsystem cpu_subsystem (
   .reset_reset_n  ( rst_n )
 );
 
+serial_flash_loader serial_flash_loader (
+  .noe_in ( 1'b0 )
+);
+
 endmodule
 
