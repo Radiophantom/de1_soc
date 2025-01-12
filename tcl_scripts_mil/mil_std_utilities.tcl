@@ -47,7 +47,7 @@ proc send_word {cmd data} {
   mil_std_mem write16 4 $cmd
   mil_std_mem write16 2 (1 << 0)
   for {set i 0} {$i < 1000} {incr i} {
-    if { [expr [mil_std_mem read16 2] & (1 << 0)] == 0 } {
+    if { [expr [mil_std_mem read16 2] & 0x0001] == 0 } {
       break
     }
     after 1
@@ -61,15 +61,16 @@ proc send_word {cmd data} {
 
 proc rcv_word {} {
   for {set i 0} {$i < 1000} {incr i} {
-    if { [expr [mil_std_mem read16 9] & (1 << 0)] } {
+    if { [expr [mil_std_mem read16 9] & 0x0001] } {
       break
     }
     after 1
   }
   set rcv_word_data [mil_std_mem read16 10]
-  set rcv_word_sync [expr [mil_std_mem read16 11] & (1 << 15)]
+  set rcv_word_sync [expr [mil_std_mem read16 11] & 0x0001]
   mil_std_mem write16 9 0x0
-  if {$rcv_word_sync == 0x0} {
+  mil_std_mem write16 6 0x0
+  if {$rcv_word_sync == 1} {
     puts "RECEIVED COMMAND WORD: $rcv_word_data"
   } else {
     puts "RECEIVED DATA WORD: $rcv_word_data"
@@ -93,20 +94,20 @@ proc rcv_data {RT_ADDRESS SUB_ADDRESS WORDS_COUNT} {
     send_word 0 $DATA
     incr DATA
   }
-  #rcv_word
+  rcv_word
 }
 
 proc rcv_mcode_data {RT_ADDRESS CODE WORD} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (31 << 5) + $CODE]
   send_word 1 $CMD_WORD
   send_word 0 $WORD
-  #rcv_word
+  rcv_word
 }
 
 proc rcv_mcode_no_data {RT_ADDRESS CODE} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (31 << 5) + $CODE]
   send_word 1 $CMD_WORD
-  #rcv_word
+  rcv_word
 }
 
 proc rcv_data_bc {SUB_ADDRESS WORDS_COUNT} {
@@ -170,7 +171,7 @@ proc rcv_mcode_no_data_bc {CODE} {
 
 proc xmt_data {RT_ADDRESS SUB_ADDRESS WORDS_COUNT} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (1 << 10) + ($SUB_ADDRESS << 5) + $WORDS_COUNT]
-  send_word 0 $CMD_WORD
+  send_word 1 $CMD_WORD
   rcv_word
   for {set i 0} {$i < $WORDS_COUNT} {incr i} {
     rcv_word
@@ -179,14 +180,14 @@ proc xmt_data {RT_ADDRESS SUB_ADDRESS WORDS_COUNT} {
 
 proc xmt_mcode_data {RT_ADDRESS CODE} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (1 << 10) + (31 << 5) + $CODE]
-  send_word 0 $CMD_WORD
+  send_word 1 $CMD_WORD
   rcv_word
   rcv_word
 }
 
 proc xmt_mcode_no_data {RT_ADDRESS CODE} {
   set CMD_WORD [expr ($RT_ADDRESS << 11) + (1 << 10) + (31 << 5) + $CODE]
-  send_word 0 $CMD_WORD
+  send_word 1 $CMD_WORD
   rcv_word
 }
 
