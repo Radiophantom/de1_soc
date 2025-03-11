@@ -1,0 +1,3 @@
+[submodule "rtl/pci_core"]
+	path = rtl/pci_core
+	url = git@github.com:Radiophantom/pci_core.git
