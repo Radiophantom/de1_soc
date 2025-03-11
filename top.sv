@@ -50,8 +50,8 @@ module top(
       inout              FPGA_I2C_SDAT,
 
       ///////// GPIO /////////
-      inout      [35:0]  GPIO_0,
-      inout      [35:0]  GPIO_1,
+      input      [35:0]  GPIO_0,
+      input      [35:0]  GPIO_1,
 
       ///////// HEX0 /////////
       output      [6:0]  HEX0,
@@ -180,14 +180,62 @@ assign HEX3 = '0;
 assign HEX4 = '0;
 assign HEX5 = '0;
 
-cpu_subsystem cpu_subsystem (
-  .clk_clk        ( clk   ),
-  .reset_reset_n  ( rst_n )
-);
+//cpu_subsystem cpu_subsystem (
+//  .clk_clk        ( clk   ),
+//  .reset_reset_n  ( rst_n )
+//);
+//
+//serial_flash_loader serial_flash_loader (
+//  .noe_in ( 1'b0 )
+//);
 
-serial_flash_loader serial_flash_loader (
-  .noe_in ( 1'b0 )
-);
+//------------------------------------------------------------------------------
+// PCI signals
+//------------------------------------------------------------------------------
+
+logic pci_rst;
+logic pci_clk;
+
+assign pci_rst = !GPIO_0[0]; // NOTE: RESETn is inverted signal
+assign pci_clk =  GPIO_0[2];
+
+(* noprune *) logic [3:0][7:0]  ad;
+(* noprune *) logic [3:0]       cbe;
+
+always_ff @(posedge pci_clk)
+  begin
+    ad[0] <= {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]};
+    ad[1] <= {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]};
+    ad[2] <= {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]};
+    ad[3] <= {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16]};
+  end
+
+always_ff @(posedge pci_clk)
+  begin
+    cbe   <= {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]};
+  end
+
+(* noprune *) logic par;
+(* noprune *) logic frame;
+(* noprune *) logic irdy;
+(* noprune *) logic trdy;
+(* noprune *) logic stop;
+(* noprune *) logic devsel;
+(* noprune *) logic idsel;
+
+always_ff @(posedge pci_clk)
+  begin
+    par     <= GPIO_1[ 1];
+    frame   <= GPIO_1[ 5];
+    irdy    <= GPIO_1[ 7];
+    trdy    <= GPIO_1[ 9];
+    stop    <= GPIO_1[11];
+    devsel  <= GPIO_1[13];
+    idsel   <= GPIO_1[ 8];
+  end
+
+//assign GPIO_0 = 'Z;
+//assign GPIO_1 = 'Z;
 
 endmodule
 
