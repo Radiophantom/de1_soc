@@ -199,100 +199,110 @@ logic pci_clk;
 assign pci_rst = !GPIO_0[0]; // NOTE: RESETn is inverted signal
 assign pci_clk =  GPIO_0[2];
 
-logic             ad_oe_en;
+logic             frame_i;
 logic [3:0][7:0]  ad_i;
+logic [3:0]       cbe_i;
+logic             par_i;
+logic             irdy_i;
+logic             trdy_i;
+logic             stop_i;
+logic             devsel_i;
+logic             idsel_i;
+
+logic             frame_o;
 logic [3:0][7:0]  ad_o;
+logic [3:0]       cbe_o;
+logic             par_o;
+logic             irdy_o;
+logic             trdy_o;
+logic             stop_o;
+logic             devsel_o;
 
-logic [3:0]       cbe;
+logic             frame_o_en;
+logic             ad_o_en;
+logic             cbe_o_en;
+logic             par_o_en;
+logic             irdy_o_en;
+logic             trdy_o_en;
+logic             stop_o_en;
+logic             devsel_o_en;
 
-assign ad_i[0] = {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]};
-assign ad_i[1] = {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]};
-assign ad_i[2] = {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]};
+assign frame_i  = GPIO_1[ 5];
 assign ad_i[3] = {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16]};
+assign ad_i[2] = {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]};
+assign ad_i[1] = {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]};
+assign ad_i[0] = {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]};
+assign cbe_i   = {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]};
+assign par_i    = GPIO_1[ 1];
+assign irdy_i   = GPIO_1[ 7];
+assign trdy_i   = GPIO_1[ 9];
+assign stop_i   = GPIO_1[11];
+assign devsel_i = GPIO_1[13];
+assign idsel_i  = GPIO_1[ 8];
 
-assign cbe = {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]};
-
-logic par_oe_en;
-logic par_i;
-logic par_o;
-
-logic frame;
-logic irdy;
-logic trdy;
-logic stop;
-logic devsel;
-logic idsel;
-
-assign par_i  = GPIO_1[ 1];
-assign frame  = GPIO_1[ 5];
-assign irdy   = GPIO_1[ 7];
-assign idsel  = GPIO_1[ 8];
-
-assign GPIO_1[ 1] = par_oe_en ? par_o : 1'bZ;
-assign {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16],
-        GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35],
-        GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19],
-        GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]} = ad_oe_en ? ad_o : 'Z;
+assign  GPIO_1[ 5] = frame_o_en ? frame_o : 'Z;
+assign  {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16]} = ad_o_en ? ad_o[3] : 'Z;
+assign  {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]} = ad_o_en ? ad_o[2] : 'Z;
+assign  {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]} = ad_o_en ? ad_o[1] : 'Z;
+assign  {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]} = ad_o_en ? ad_o[0] : 'Z;
+assign  {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]} = cbe_o_en ? cbe_o : 'Z;
+assign  GPIO_1[ 1] = par_o_en     ? par_o     : 'Z;
+assign  GPIO_1[ 7] = irdy_o_en    ? irdy_o    : 'Z;
+assign  GPIO_1[ 9] = trdy_o_en    ? trdy_o    : 'Z;
+assign  GPIO_1[11] = stop_o_en    ? stop_o    : 'Z;
+assign  GPIO_1[13] = devsel_o_en  ? devsel_o  : 'Z;
 
 avalon_mm_if #(32,32) mem_if (pci_clk);
 
-logic trdy_oe_en;
-logic devsel_oe_en;
-logic stop_oe_en;
-
-assign GPIO_1[ 9] = trdy_oe_en    ? trdy   : 1'bZ;
-assign GPIO_1[11] = stop_oe_en    ? stop   : 1'bZ;
-assign GPIO_1[13] = devsel_oe_en  ? devsel : 1'bZ;
-
 pci_core_top pci_core_top_inst (
-  .pci_clk_i    ( pci_clk   ),
-  .pci_rst_i    ( pci_rst   ),
+  .clk_i          ( pci_clk     ),
+  .rst_i          ( pci_rst     ),
 
-  .FRAMEn_i     ( frame     ),
-  .CBEn_i       ( cbe       ),
-  .IRDYn_i      ( irdy      ),
-  .IDSEL_i      ( idsel     ),
+  .FRAMEn_in      ( frame_i     ),
+  .AD_in          ( ad_i        ),
+  .PAR_in         ( par_i       ),
+  .CBEn_in        ( cbe_i       ),
+  .IRDYn_in       ( irdy_i      ),
+  .TRDYn_in       ( trdy_i      ),
+  .DEVSELn_in     ( devsel_i    ),
+  .STOPn_in       ( stop_i      ),
+  .IDSEL_in       ( idsel_i     ),
 
-  .TRDYn_oe_en  ( trdy_oe_en  ),
-  .TRDYn_o      ( trdy        ),
-  .DEVSELn_oe_en( devsel_oe_en),
-  .DEVSELn_o    ( devsel      ),
-  .STOPn_oe_en  ( stop_oe_en  ),
-  .STOPn_o      ( stop        ),
+  .FRAMEn_out     ( frame_o     ),
+  .AD_out         ( ad_o        ),
+  .PAR_out        ( par_o       ),
+  .CBEn_out       ( cbe_o       ),
+  .IRDYn_out      ( irdy_o      ),
+  .TRDYn_out      ( trdy_o      ),
+  .DEVSELn_out    ( devsel_o    ),
+  .STOPn_out      ( stop_o      ),
 
-  .AD_io_en     ( ad_oe_en  ),
-  .AD_i         ( ad_i      ),
-  .AD_o         ( ad_o      ),
-  .PAR_io_en    ( par_oe_en ),
-  .PAR_i        ( par_i     ),
-  .PAR_o        ( par_o     ),
+  .FRAMEn_out_en  ( frame_o_en  ),
+  .AD_out_en      ( ad_o_en     ),
+  .PAR_out_en     ( par_o_en    ),
+  .CBEn_out_en    ( cbe_o_en    ),
+  .IRDYn_out_en   ( irdy_o_en   ),
+  .TRDYn_out_en   ( trdy_o_en   ),
+  .DEVSELn_out_en ( devsel_o_en ),
+  .STOPn_out_en   ( stop_o_en   ),
 
-  .mem_if       ( mem_if    )
+  .mem_if         ( mem_if      )
 );
 
-//always_ff @(posedge pci_clk)
-//  begin
-//    ad[0] <= {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]};
-//    ad[1] <= {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]};
-//    ad[2] <= {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]};
-//    ad[3] <= {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16]};
-//  end
-
-//always_ff @(posedge pci_clk)
-//  begin
-//    cbe   <= {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]};
-//  end
-
-//always_ff @(posedge pci_clk)
-//  begin
-//    par     <= GPIO_1[ 1];
-//    frame   <= GPIO_1[ 5];
-//    irdy    <= GPIO_1[ 7];
-//    trdy    <= GPIO_1[ 9];
-//    stop    <= GPIO_1[11];
-//    devsel  <= GPIO_1[13];
-//    idsel   <= GPIO_1[ 8];
-//  end
+amm_memory #(
+  .MEM_DEPTH          ( 64*1024               )
+) amm_memory_inst_64KB (
+  .rst_i              ( pci_rst               ),
+  .clk_i              ( pci_clk               ),
+  .amm_address        ( mem_if.address        ),
+  .amm_read           ( mem_if.read           ),
+  .amm_byteenable     ( mem_if.byteenable     ),
+  .amm_write          ( mem_if.write          ),
+  .amm_writedata      ( mem_if.writedata      ),
+  .amm_readdatavalid  ( mem_if.readdatavalid  ),
+  .amm_readdata       ( mem_if.readdata       ),
+  .amm_waitrequest    ( mem_if.waitrequest    )
+);
 
 endmodule
 
