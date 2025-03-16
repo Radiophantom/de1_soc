@@ -728,6 +728,14 @@ set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name QSYS_FILE serial_flash_loader.qsys
 set_global_assignment -name QSYS_FILE cpu_subsystem.qsys
 set_global_assignment -name SYSTEMVERILOG_FILE top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/pci_core_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/pci_cfg_if.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/avalon_mm_if.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/amm_demux.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/amm_rename.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/cfg_core.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/pci_core.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pci_core/rtl/pci_core_top.sv
 set_global_assignment -name SDC_FILE top.sdc
 set_global_assignment -name ENABLE_OCT_DONE OFF
 set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
@@ -741,4 +749,11 @@ set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
 set_global_assignment -name ACTIVE_SERIAL_CLOCK FREQ_100MHZ
+
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to GPIO_0 -disable
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to GPIO_1 -disable
+set_instance_assignment -name FAST_OUTPUT_ENABLE_REGISTER ON -to GPIO_0
+set_instance_assignment -name FAST_OUTPUT_ENABLE_REGISTER ON -to GPIO_1
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to GPIO_0
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to GPIO_1
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

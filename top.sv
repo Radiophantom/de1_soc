@@ -50,8 +50,8 @@ module top(
       inout              FPGA_I2C_SDAT,
 
       ///////// GPIO /////////
-      input      [35:0]  GPIO_0,
-      input      [35:0]  GPIO_1,
+      inout      [35:0]  GPIO_0,
+      inout      [35:0]  GPIO_1,
 
       ///////// HEX0 /////////
       output      [6:0]  HEX0,
@@ -190,7 +190,7 @@ assign HEX5 = '0;
 //);
 
 //------------------------------------------------------------------------------
-// PCI signals
+// PCI controller
 //------------------------------------------------------------------------------
 
 logic pci_rst;
@@ -199,43 +199,100 @@ logic pci_clk;
 assign pci_rst = !GPIO_0[0]; // NOTE: RESETn is inverted signal
 assign pci_clk =  GPIO_0[2];
 
-(* noprune *) logic [3:0][7:0]  ad;
-(* noprune *) logic [3:0]       cbe;
+logic             ad_oe_en;
+logic [3:0][7:0]  ad_i;
+logic [3:0][7:0]  ad_o;
 
-always_ff @(posedge pci_clk)
-  begin
-    ad[0] <= {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]};
-    ad[1] <= {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]};
-    ad[2] <= {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]};
-    ad[3] <= {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16]};
-  end
+logic [3:0]       cbe;
 
-always_ff @(posedge pci_clk)
-  begin
-    cbe   <= {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]};
-  end
+assign ad_i[0] = {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]};
+assign ad_i[1] = {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]};
+assign ad_i[2] = {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]};
+assign ad_i[3] = {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16]};
 
-(* noprune *) logic par;
-(* noprune *) logic frame;
-(* noprune *) logic irdy;
-(* noprune *) logic trdy;
-(* noprune *) logic stop;
-(* noprune *) logic devsel;
-(* noprune *) logic idsel;
+assign cbe = {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]};
 
-always_ff @(posedge pci_clk)
-  begin
-    par     <= GPIO_1[ 1];
-    frame   <= GPIO_1[ 5];
-    irdy    <= GPIO_1[ 7];
-    trdy    <= GPIO_1[ 9];
-    stop    <= GPIO_1[11];
-    devsel  <= GPIO_1[13];
-    idsel   <= GPIO_1[ 8];
-  end
+logic par_oe_en;
+logic par_i;
+logic par_o;
 
-//assign GPIO_0 = 'Z;
-//assign GPIO_1 = 'Z;
+logic frame;
+logic irdy;
+logic trdy;
+logic stop;
+logic devsel;
+logic idsel;
+
+assign par_i  = GPIO_1[ 1];
+assign frame  = GPIO_1[ 5];
+assign irdy   = GPIO_1[ 7];
+assign idsel  = GPIO_1[ 8];
+
+assign GPIO_1[ 1] = par_oe_en ? par_o : 1'bZ;
+assign {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16],
+        GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35],
+        GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19],
+        GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]} = ad_oe_en ? ad_o : 'Z;
+
+avalon_mm_if #(32,32) mem_if (pci_clk);
+
+logic trdy_oe_en;
+logic devsel_oe_en;
+logic stop_oe_en;
+
+assign GPIO_1[ 9] = trdy_oe_en    ? trdy   : 1'bZ;
+assign GPIO_1[11] = stop_oe_en    ? stop   : 1'bZ;
+assign GPIO_1[13] = devsel_oe_en  ? devsel : 1'bZ;
+
+pci_core_top pci_core_top_inst (
+  .pci_clk_i    ( pci_clk   ),
+  .pci_rst_i    ( pci_rst   ),
+
+  .FRAMEn_i     ( frame     ),
+  .CBEn_i       ( cbe       ),
+  .IRDYn_i      ( irdy      ),
+  .IDSEL_i      ( idsel     ),
+
+  .TRDYn_oe_en  ( trdy_oe_en  ),
+  .TRDYn_o      ( trdy        ),
+  .DEVSELn_oe_en( devsel_oe_en),
+  .DEVSELn_o    ( devsel      ),
+  .STOPn_oe_en  ( stop_oe_en  ),
+  .STOPn_o      ( stop        ),
+
+  .AD_io_en     ( ad_oe_en  ),
+  .AD_i         ( ad_i      ),
+  .AD_o         ( ad_o      ),
+  .PAR_io_en    ( par_oe_en ),
+  .PAR_i        ( par_i     ),
+  .PAR_o        ( par_o     ),
+
+  .mem_if       ( mem_if    )
+);
+
+//always_ff @(posedge pci_clk)
+//  begin
+//    ad[0] <= {GPIO_0[17],GPIO_0[15],GPIO_0[13],GPIO_0[11],GPIO_0[ 9],GPIO_0[ 7],GPIO_0[ 5],GPIO_0[ 3]};
+//    ad[1] <= {GPIO_0[33],GPIO_0[31],GPIO_0[29],GPIO_0[27],GPIO_0[25],GPIO_0[23],GPIO_0[21],GPIO_0[19]};
+//    ad[2] <= {GPIO_0[14],GPIO_0[12],GPIO_0[10],GPIO_0[ 8],GPIO_0[ 6],GPIO_0[ 4],GPIO_0[32],GPIO_0[35]};
+//    ad[3] <= {GPIO_0[30],GPIO_0[28],GPIO_0[26],GPIO_0[24],GPIO_0[22],GPIO_0[20],GPIO_0[18],GPIO_0[16]};
+//  end
+
+//always_ff @(posedge pci_clk)
+//  begin
+//    cbe   <= {GPIO_1[6],GPIO_0[4],GPIO_0[2],GPIO_0[0]};
+//  end
+
+//always_ff @(posedge pci_clk)
+//  begin
+//    par     <= GPIO_1[ 1];
+//    frame   <= GPIO_1[ 5];
+//    irdy    <= GPIO_1[ 7];
+//    trdy    <= GPIO_1[ 9];
+//    stop    <= GPIO_1[11];
+//    devsel  <= GPIO_1[13];
+//    idsel   <= GPIO_1[ 8];
+//  end
 
 endmodule
 
