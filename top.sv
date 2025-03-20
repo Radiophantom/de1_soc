@@ -218,92 +218,172 @@ logic pci_clk;
 assign pci_rst = !PCI_RSTn; // NOTE: RESETn is inverted signal
 assign pci_clk =  PCI_CLK;
 
-logic             frame_o;
-logic [3:0][7:0]  ad_o;
-logic [3:0]       cbe_o;
-logic             par_o;
-logic             irdy_o;
-logic             trdy_o;
-logic             stop_o;
-logic             devsel_o;
-logic             perr_o  = 1'b1;
-logic             serr_o  = 1'b0;
-logic             int_o   = 1'b0;
+logic [1:0]            frame_o;
+logic [1:0][3:0][7:0]  ad_o;
+logic [1:0][3:0]       cbe_o;
+logic [1:0]            par_o;
+logic [1:0]            irdy_o;
+logic [1:0]            trdy_o;
+logic [1:0]            stop_o;
+logic [1:0]            devsel_o;
+logic [1:0]            perr_o  = '1;
+logic [1:0]            serr_o  = '0;
+//logic             int_o   = 1'b0;
 
-logic             frame_o_en;
-logic             ad_o_en;
-logic             cbe_o_en;
-logic             par_o_en;
-logic             irdy_o_en;
-logic             trdy_o_en;
-logic             stop_o_en;
-logic             devsel_o_en;
-logic             perr_o_en = 1'b0;
+logic             frame;
+logic [3:0][7:0]  ad;
+logic [3:0]       cbe;
+logic             par;
+logic             irdy;
+logic             trdy;
+logic             stop;
+logic             devsel;
+logic             perr;
 
-assign PCI_FRAMEn   = frame_o_en  ? frame_o   : 'Z;
-assign PCI_AD       = ad_o_en     ? ad_o      : 'Z;
-assign PCI_CBEn     = cbe_o_en    ? cbe_o     : 'Z;
-assign PCI_PAR      = par_o_en    ? par_o     : 'Z;
-assign PCI_IRDYn    = irdy_o_en   ? irdy_o    : 'Z;
-assign PCI_TRDYn    = trdy_o_en   ? trdy_o    : 'Z;
-assign PCI_STOPn    = stop_o_en   ? stop_o    : 'Z;
-assign PCI_DEVSELn  = devsel_o_en ? devsel_o  : 'Z;
-assign PCI_PERRn    = perr_o_en   ? perr_o    : 'Z;
+logic [1:0]            frame_o_en;
+logic [1:0]            ad_o_en;
+logic [1:0]            cbe_o_en;
+logic [1:0]            par_o_en;
+logic [1:0]            irdy_o_en;
+logic [1:0]            trdy_o_en;
+logic [1:0]            stop_o_en;
+logic [1:0]            devsel_o_en;
+logic [1:0]            perr_o_en = '0;
+
+assign frame  = frame_o_en[0]  ? frame_o[0]  : frame_o[1]  ;
+assign ad     = ad_o_en[0]     ? ad_o[0]     : ad_o[1]     ;
+assign cbe    = cbe_o_en[0]    ? cbe_o[0]    : cbe_o[1]    ;
+assign par    = par_o_en[0]    ? par_o[0]    : par_o[1]    ;
+assign irdy   = irdy_o_en[0]   ? irdy_o[0]   : irdy_o[1]   ;
+assign trdy   = trdy_o_en[0]   ? trdy_o[0]   : trdy_o[1]   ;
+assign stop   = stop_o_en[0]   ? stop_o[0]   : stop_o[1]   ;
+assign devsel = devsel_o_en[0] ? devsel_o[0] : devsel_o[1] ;
+assign perr   = perr_o_en[0]   ? perr_o[0]   : perr_o[1]   ;
+
+logic int_o;
+
+vio vio_inst (
+  .source(int_o)
+);
+
+assign PCI_FRAMEn   = |frame_o_en  ? frame   : 'Z;
+assign PCI_AD       = |ad_o_en     ? ad      : 'Z;
+assign PCI_CBEn     = |cbe_o_en    ? cbe     : 'Z;
+assign PCI_PAR      = |par_o_en    ? par     : 'Z;
+assign PCI_IRDYn    = |irdy_o_en   ? irdy    : 'Z;
+assign PCI_TRDYn    = |trdy_o_en   ? trdy    : 'Z;
+assign PCI_STOPn    = |stop_o_en   ? stop    : 'Z;
+assign PCI_DEVSELn  = |devsel_o_en ? devsel  : 'Z;
+assign PCI_PERRn    = |perr_o_en   ? perr    : 'Z;
 
 // Not used signals now
-assign PCI_SERRn  = serr_o ? 1'b0 : 'Z;
+assign PCI_SERRn  = serr_o[0] ? 1'b0 : 'Z;
 assign PCI_INTAn  = int_o  ? 1'b0 : 'Z;
 
-avalon_mm_if #(32,32) mem_if (pci_clk);
+avalon_mm_if #(32,32) mem0_if (pci_clk);
+avalon_mm_if #(32,32) mem1_if (pci_clk);
 
-pci_core_top pci_core_top_inst (
-  .clk_i          ( pci_clk     ),
-  .rst_i          ( pci_rst     ),
+parameter int IDSEL0_IDX = 16;
+parameter int IDSEL1_IDX = 17;
 
-  .FRAMEn_in      ( PCI_FRAMEn  ),
-  .AD_in          ( PCI_AD      ),
-  .PAR_in         ( PCI_PAR     ),
-  .CBEn_in        ( PCI_CBEn    ),
-  .IRDYn_in       ( PCI_IRDYn   ),
-  .TRDYn_in       ( PCI_TRDYn   ),
-  .DEVSELn_in     ( PCI_DEVSELn ),
-  .STOPn_in       ( PCI_STOPn   ),
-  .IDSEL_in       ( PCI_IDSEL   ),
+pci_core_top pci_core_top0_inst (
+  .clk_i          ( pci_clk             ),
+  .rst_i          ( pci_rst             ),
 
-  .FRAMEn_out     ( frame_o     ),
-  .AD_out         ( ad_o        ),
-  .PAR_out        ( par_o       ),
-  .CBEn_out       ( cbe_o       ),
-  .IRDYn_out      ( irdy_o      ),
-  .TRDYn_out      ( trdy_o      ),
-  .DEVSELn_out    ( devsel_o    ),
-  .STOPn_out      ( stop_o      ),
+  .FRAMEn_in      ( PCI_FRAMEn          ),
+  .AD_in          ( PCI_AD              ),
+  .PAR_in         ( PCI_PAR             ),
+  .CBEn_in        ( PCI_CBEn            ),
+  .IRDYn_in       ( PCI_IRDYn           ),
+  .TRDYn_in       ( PCI_TRDYn           ),
+  .DEVSELn_in     ( PCI_DEVSELn         ),
+  .STOPn_in       ( PCI_STOPn           ),
+  .IDSEL_in       ( PCI_AD[IDSEL0_IDX]  ),
 
-  .FRAMEn_out_en  ( frame_o_en  ),
-  .AD_out_en      ( ad_o_en     ),
-  .PAR_out_en     ( par_o_en    ),
-  .CBEn_out_en    ( cbe_o_en    ),
-  .IRDYn_out_en   ( irdy_o_en   ),
-  .TRDYn_out_en   ( trdy_o_en   ),
-  .DEVSELn_out_en ( devsel_o_en ),
-  .STOPn_out_en   ( stop_o_en   ),
+  .FRAMEn_out     ( frame_o[0]          ),
+  .AD_out         ( ad_o[0]             ),
+  .PAR_out        ( par_o[0]            ),
+  .CBEn_out       ( cbe_o[0]            ),
+  .IRDYn_out      ( irdy_o[0]           ),
+  .TRDYn_out      ( trdy_o[0]           ),
+  .DEVSELn_out    ( devsel_o[0]         ),
+  .STOPn_out      ( stop_o[0]           ),
 
-  .mem_if         ( mem_if      )
+  .FRAMEn_out_en  ( frame_o_en[0]       ),
+  .AD_out_en      ( ad_o_en[0]          ),
+  .PAR_out_en     ( par_o_en[0]         ),
+  .CBEn_out_en    ( cbe_o_en[0]         ),
+  .IRDYn_out_en   ( irdy_o_en[0]        ),
+  .TRDYn_out_en   ( trdy_o_en[0]        ),
+  .DEVSELn_out_en ( devsel_o_en[0]      ),
+  .STOPn_out_en   ( stop_o_en[0]        ),
+
+  .mem_if         ( mem0_if              )
+);
+
+pci_core_top pci_core_top1_inst (
+  .clk_i          ( pci_clk             ),
+  .rst_i          ( pci_rst             ),
+
+  .FRAMEn_in      ( PCI_FRAMEn          ),
+  .AD_in          ( PCI_AD              ),
+  .PAR_in         ( PCI_PAR             ),
+  .CBEn_in        ( PCI_CBEn            ),
+  .IRDYn_in       ( PCI_IRDYn           ),
+  .TRDYn_in       ( PCI_TRDYn           ),
+  .DEVSELn_in     ( PCI_DEVSELn         ),
+  .STOPn_in       ( PCI_STOPn           ),
+  .IDSEL_in       ( PCI_AD[IDSEL1_IDX]  ),
+
+  .FRAMEn_out     ( frame_o[1]          ),
+  .AD_out         ( ad_o[1]             ),
+  .PAR_out        ( par_o[1]            ),
+  .CBEn_out       ( cbe_o[1]            ),
+  .IRDYn_out      ( irdy_o[1]           ),
+  .TRDYn_out      ( trdy_o[1]           ),
+  .DEVSELn_out    ( devsel_o[1]         ),
+  .STOPn_out      ( stop_o[1]           ),
+
+  .FRAMEn_out_en  ( frame_o_en[1]       ),
+  .AD_out_en      ( ad_o_en[1]          ),
+  .PAR_out_en     ( par_o_en[1]         ),
+  .CBEn_out_en    ( cbe_o_en[1]         ),
+  .IRDYn_out_en   ( irdy_o_en[1]        ),
+  .TRDYn_out_en   ( trdy_o_en[1]        ),
+  .DEVSELn_out_en ( devsel_o_en[1]      ),
+  .STOPn_out_en   ( stop_o_en[1]        ),
+
+  .mem_if         ( mem1_if              )
 );
 
 amm_memory #(
   .MEM_DEPTH          ( 64*1024               )
-) amm_memory_inst_64KB (
+) amm_memory_inst0_64KB (
   .rst_i              ( pci_rst               ),
   .clk_i              ( pci_clk               ),
-  .amm_address        ( mem_if.address        ),
-  .amm_read           ( mem_if.read           ),
-  .amm_byteenable     ( mem_if.byteenable     ),
-  .amm_write          ( mem_if.write          ),
-  .amm_writedata      ( mem_if.writedata      ),
-  .amm_readdatavalid  ( mem_if.readdatavalid  ),
-  .amm_readdata       ( mem_if.readdata       ),
-  .amm_waitrequest    ( mem_if.waitrequest    )
+  .amm_address        ( mem0_if.address       ),
+  .amm_read           ( mem0_if.read          ),
+  .amm_byteenable     ( mem0_if.byteenable    ),
+  .amm_write          ( mem0_if.write         ),
+  .amm_writedata      ( mem0_if.writedata     ),
+  .amm_readdatavalid  ( mem0_if.readdatavalid ),
+  .amm_readdata       ( mem0_if.readdata      ),
+  .amm_waitrequest    ( mem0_if.waitrequest   )
+);
+
+amm_memory #(
+  .MEM_DEPTH          ( 64*1024               )
+) amm_memory_inst1_64KB (
+  .rst_i              ( pci_rst               ),
+  .clk_i              ( pci_clk               ),
+  .amm_address        ( mem1_if.address       ),
+  .amm_read           ( mem1_if.read          ),
+  .amm_byteenable     ( mem1_if.byteenable    ),
+  .amm_write          ( mem1_if.write         ),
+  .amm_writedata      ( mem1_if.writedata     ),
+  .amm_readdatavalid  ( mem1_if.readdatavalid ),
+  .amm_readdata       ( mem1_if.readdata      ),
+  .amm_waitrequest    ( mem1_if.waitrequest   )
 );
 
 endmodule
