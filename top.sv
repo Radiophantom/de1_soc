@@ -286,7 +286,7 @@ avalon_mm_if #(32,32) mem1_if (pci_clk);
 parameter int IDSEL0_IDX = 16;
 parameter int IDSEL1_IDX = 17;
 
-pci_core_top pci_core_top0_inst (
+pci_core_top #(64*1024) pci_core_top0_inst (
   .clk_i          ( pci_clk             ),
   .rst_i          ( pci_rst             ),
 
@@ -321,7 +321,7 @@ pci_core_top pci_core_top0_inst (
   .mem_if         ( mem0_if              )
 );
 
-pci_core_top pci_core_top1_inst (
+pci_core_top #(128*1024) pci_core_top1_inst (
   .clk_i          ( pci_clk             ),
   .rst_i          ( pci_rst             ),
 
@@ -372,7 +372,7 @@ amm_memory #(
 );
 
 amm_memory #(
-  .MEM_DEPTH          ( 64*1024               )
+  .MEM_DEPTH          ( 128*1024               )
 ) amm_memory_inst1_64KB (
   .rst_i              ( pci_rst               ),
   .clk_i              ( pci_clk               ),
